@@ -85,17 +85,17 @@ const markup = images
 
 gallery.insertAdjacentHTML("afterbegin", markup);
 
-const modal = images
-	.map(
-		(image) => `
-		<div id="modal" hidden>
-		<h1>modal</h1>
-	<img width="1112" height="640" src="${image.original}">
-</div>`
-	)
-	.join("");
+//const modal = images
+//	.map(
+//		(image) => `
+//		<div id="modal" hidden>
+//		<h1>modal</h1>
+//	<img width="1112" height="640" src="${image.original}">
+//</div>`
+//	)
+//	.join("");
 
-document.body.insertAdjacentHTML("beforeend", modal);
+//ocument.body.insertAdjacentHTML("beforeend", modal);
 
 gallery.addEventListener("click", selectImg);
 
@@ -103,15 +103,15 @@ function selectImg(event) {
 	console.log(event.target.dataset.source);
 	event.preventDefault();
 
-	const imageInstance = basicLightbox.create(
-		document.querySelector("#modal")
-	);
+	const imageInstance = basicLightbox.create(`<div id="modal" hidden>
+	<img width="1112" height="640" src="${event.target.dataset.source}">
+</div>`);
 
-	gallery.onclick = imageInstance.show();
+	imageInstance.show();
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape") {
+			imageInstance.close();
+		}
+	});
 }
-
-document.addEventListener("keydown", (e) => {
-	if (e.key === "Escape") {
-		gallery.onclick = imageInstance.close();
-	}
-});
