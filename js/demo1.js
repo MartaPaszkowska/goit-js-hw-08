@@ -64,44 +64,73 @@ const images = [
 		description: "Lighthouse Coast Sea",
 	},
 ];
-
-const gallery = document.querySelector(".gallery");
-
-const markup = images
-	.map(
-		(image) =>
-			`<li class="gallery-item">
-			<a class="gallery-link" href="${image.original}">
-				<img
-					class="gallery-image"
-					src="${image.preview}"
-					data-source="${image.original}"
-					alt="${image.description}"
-				/>
-			</a>
-		</li>
-		<div id="modal" hidden>
-		<h1>modal</h1>
-	<img width="1112" height="640" src="${image.original}">
-</div>`
-	)
-	.join("");
-
-gallery.insertAdjacentHTML("afterbegin", markup);
-gallery.addEventListener("click", selectImg);
-
-function selectImg(event) {
-	console.log(event.target.dataset.source);
-	event.preventDefault();
-
-	const imageInstance = basicLightbox.create(
-		document.querySelector("#modal")
-	);
-
-	gallery.onclick = imageInstance.show;
-}
-document.addEventListener("keydown", (event) => {
-	if (event.code === "Escape") {
-		imageInstance.close();
+class Gallery {
+	constructor({ images, galleryRoot, modalRoot }) {
+		this.images = images;
+		this.createGallery(galleryRoot);
+		this.modal = this.createModal(modalRoot);
+		this.buttonModal(galleryRoot);
 	}
+
+	createGallery(galleryRoot) {
+		const imgs = this.images.map(this.createImage);
+		galleryRoot.append(...imgs);
+	}
+
+	createImage({ description, original, preview }) {
+		const container = document.createElement("li");
+		container.classList.add("allery-item");
+
+		const a = document.createElement("a");
+		a.classList.add("gallery-link");
+		a.href = original;
+
+		const img = document.createElement("img");
+		img.classList.add("gallery-image");
+		img.src = preview;
+		img.alt = description;
+		img.dataset.source = original;
+
+		container.appendChild(a);
+		container.appendChild(img);
+		return container;
+	}
+	createModal(modalRoot) {
+		const onShow = this.renderModal.bind(this);
+		return basicLightbox.create(modalRoot, { onShow });
+	}
+	renderModal(lightbox) {
+		const currentImage = this.getCurrentImage();
+		if (currentImage === null) return lightbox.close();
+
+		const modal = lightbox.element();
+
+		const img = modal.querySelector("img");
+		img.alt = currentImage.description;
+		img.src = currentImage.original;
+
+		modal.querySelector("p").textContent = currentImage.description;
+		modal.querySelector("button").onClick = lightbox.close;
+	}
+	buttonModal(galleryRoot) {
+		if (!this.modal) return;
+		galleryRoot.addEventListener("click", (event) => {
+			if (
+				event.target.tagName === "li" ||
+				event.target.parentNode.tagName === "li"
+			);
+			this.currentImageIndex =
+				event.target.id || event.target.parentNode.id;
+			this.modal.show();
+		});
+	}
+
+	//	document.addEventListener("keydown", () => {
+	//		this.modal.close();
+	//});
+}
+const gallery = new Gallery({
+	images,
+	galleryRoot: document.querySelector(".gallery"),
+	modalRoot: document.querySelector("modal"),
 });
