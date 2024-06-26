@@ -90,7 +90,7 @@ function selectImg(event) {
 	console.log(event.target.dataset.source);
 	event.preventDefault();
 
-	const imageInstance = basicLightbox.create(`<div id="modal" class="modal">
+	const imageInstance = basicLightbox.create(`<div id="modal">
 	<img width="1112px" height="640px" src="${event.target.dataset.source}">
 </div>`);
 
