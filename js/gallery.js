@@ -107,7 +107,7 @@ function selectImg(event) {
 		document.querySelector("#modal")
 	);
 
-	gallery.onclick = imageInstance.show;
+	gallery.onclick = imageInstance.show();
 }
 
 document.addEventListener("keydown", (e) => {
