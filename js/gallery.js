@@ -79,7 +79,15 @@ const markup = images
 					alt="${image.description}"
 				/>
 			</a>
-		</li>
+		</li>`
+	)
+	.join("");
+
+gallery.insertAdjacentHTML("afterbegin", markup);
+
+const modal = images
+	.map(
+		(image) => `
 		<div id="modal" hidden>
 		<h1>modal</h1>
 	<img width="1112" height="640" src="${image.original}">
@@ -87,7 +95,8 @@ const markup = images
 	)
 	.join("");
 
-gallery.insertAdjacentHTML("afterbegin", markup);
+document.body.insertAdjacentHTML("beforeend", modal);
+
 gallery.addEventListener("click", selectImg);
 
 function selectImg(event) {
@@ -100,8 +109,9 @@ function selectImg(event) {
 
 	gallery.onclick = imageInstance.show;
 }
-document.addEventListener("keydown", (event) => {
-	if (event.code === "Escape") {
-		imageInstance.close();
+
+document.addEventListener("keydown", (e) => {
+	if (e.key === "Escape") {
+		gallery.onclick = imageInstance.close();
 	}
 });
