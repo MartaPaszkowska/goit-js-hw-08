@@ -84,19 +84,6 @@ const markup = images
 	.join("");
 
 gallery.insertAdjacentHTML("afterbegin", markup);
-
-//const modal = images
-//	.map(
-//		(image) => `
-//		<div id="modal" hidden>
-//		<h1>modal</h1>
-//	<img width="1112" height="640" src="${image.original}">
-//</div>`
-//	)
-//	.join("");
-
-//ocument.body.insertAdjacentHTML("beforeend", modal);
-
 gallery.addEventListener("click", selectImg);
 
 function selectImg(event) {
